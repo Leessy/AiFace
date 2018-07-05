@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.serenegiant.usb.UVCCamera;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,7 +14,6 @@ import java.nio.charset.Charset;
 
 public class AiFaceUpDateLicense {
     private static final String TAG = "AiFaceUpDateLicense";//sp文件
-
     public static boolean UpDateLicense(Context mContext, String strCacheDir) {
         if (isLicense(mContext)) {
             android.util.Log.d(TAG, "already write License!!!");
@@ -58,7 +59,6 @@ public class AiFaceUpDateLicense {
             String command = "cp " + dr1 + " " + dr2 + "\n";//有效 -2文件无效
 //            String command = "dd if=" + dr1 + " of=" + dr2;//有效
             String command2 = "chmod 777 " + dr2 + "\n";
-
             dataOutputStream.write(command1.getBytes(Charset.forName("utf-8")));
             dataOutputStream.write(command.getBytes(Charset.forName("utf-8")));
             dataOutputStream.write(command2.getBytes(Charset.forName("utf-8")));
