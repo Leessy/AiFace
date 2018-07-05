@@ -1,6 +1,7 @@
 package com.leessy.liuc.aiface;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -10,9 +11,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class AiFaceUpDateLicense {
-    private static final String TAG = "AiFaceUpDateLicense";
+    private static final String TAG = "AiFaceUpDateLicense";//sp文件
 
     public static boolean UpDateLicense(Context mContext, String strCacheDir) {
+        if (isLicense(mContext)) {
+            android.util.Log.d(TAG, "already write License!!!");
+            return false;
+        }
         String s = mContext.getApplicationInfo().nativeLibraryDir;
         if (TextUtils.isEmpty(s)) {
             String pkg = mContext.getPackageName();
@@ -21,9 +26,26 @@ public class AiFaceUpDateLicense {
         return cmd_copy(s + "/libUpdateLicense.so", strCacheDir + "/libUpdateLicense.so");
     }
 
+    /**
+     * 是否已写入授权
+     *
+     * @param context
+     * @return
+     */
+    private static boolean isLicense(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        boolean aBoolean = preferences.getBoolean(BuildConfig.VERSION_NAME, false);
+        if (aBoolean) {
+            return true;
+        } else {
+            preferences.edit().putBoolean(BuildConfig.VERSION_NAME, true);
+            return false;
+        }
+    }
+
     //拷贝文件
-    public static boolean cmd_copy(String dr1, String dr2) {
-        Log.d(TAG, "cmd_copy: 开始 拷贝文件" + dr1 + "--" + dr2);
+    private static boolean cmd_copy(String dr1, String dr2) {
+        android.util.Log.d(TAG, "cmd_copy: start" + dr1 + "--" + dr2);
         boolean result = false;
         DataOutputStream dataOutputStream = null;
         BufferedReader errorStream = null;
@@ -44,10 +66,10 @@ public class AiFaceUpDateLicense {
             dataOutputStream.writeBytes("exit\n");
             dataOutputStream.flush();
             process.waitFor();
-            Log.d(TAG, "cmd_copy: 复制授权文件 完成");
+            android.util.Log.d(TAG, "cmd_copy: end");
             result = true;
         } catch (Exception e) {
-            android.util.Log.e("TAG", e.getMessage(), e);
+            android.util.Log.e(TAG, e.getMessage(), e);
         } finally {
             try {
                 if (dataOutputStream != null) {
@@ -57,7 +79,7 @@ public class AiFaceUpDateLicense {
                     errorStream.close();
                 }
             } catch (IOException e) {
-                android.util.Log.e("TAG", e.getMessage(), e);
+                android.util.Log.e(TAG, e.getMessage(), e);
             }
         }
         return result;
