@@ -38,7 +38,7 @@ public class AiFaceUpDateLicense {
         if (aBoolean) {
             return true;
         } else {
-            preferences.edit().putBoolean(BuildConfig.VERSION_NAME, true);
+            preferences.edit().putBoolean(BuildConfig.VERSION_NAME, true).apply();
             return false;
         }
     }
