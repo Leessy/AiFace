@@ -12,8 +12,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-public class AiFaceUpDateLicense {
-    private static final String TAG = "AiFaceUpDateLicense";//sp文件
+public class CheckLicense {
+    private static final String TAG = "CheckLicense";//sp文件
     public static boolean UpDateLicense(Context mContext, String strCacheDir) {
         if (isLicense(mContext)) {
             android.util.Log.d(TAG, "already write License!!!");

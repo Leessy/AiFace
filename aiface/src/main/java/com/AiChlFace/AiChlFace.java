@@ -1,6 +1,10 @@
 package com.AiChlFace;
 
 
+import android.content.Context;
+
+import com.leessy.liuc.aiface.CheckLicense;
+
 // 人脸识别认证 SDK 接口类
 public class AiChlFace {
 
@@ -11,16 +15,29 @@ public class AiChlFace {
 
     // SDK初始化
     // 输入参数：
-	//     nMaxChannelNum ----  需要开启的最大通道数(受加密狗控制)
-	//     strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
+    //     nMaxChannelNum ----  需要开启的最大通道数(受加密狗控制)
+    //     strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：检测人脸、获取特征大小、提取特征、一对一及一对多等接口都必须在SDK初始化成功后才能调用
-    public static native int Init(int nMaxChannelNum, String strCacheDir);
+    private static native int Init(int nMaxChannelNum, String strCacheDir);
+
+    /**
+     * 封装初始化接口，增加授权写入
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @param strCacheDir
+     * @return
+     */
+    public static int Init(Context context, int nMaxChannelNum, String strCacheDir) {
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return Init(nMaxChannelNum, strCacheDir);
+    }
 
     // SDK初始化
     // 输入参数：
-	//     nMaxChannelNum ----  需要开启的最大通道数(受加密狗控制)
-	//     strLibPath ---- SDK依赖的LIB文件所在目录
+    //     nMaxChannelNum ----  需要开启的最大通道数(受加密狗控制)
+    //     strLibPath ---- SDK依赖的LIB文件所在目录
     //     strCachePath ---- 临时文件目录，需要此目录有可读写权限（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：检测人脸、获取特征大小、提取特征、一对一及一对多等接口都必须在SDK初始化成功后才能调用
@@ -33,8 +50,8 @@ public class AiChlFace {
 
     // 检测单个（最大的）人脸
     // 输入参数：
-	//     nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
-	//     bRgb24 ---- RGB24格式的图象数据
+    //     nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //     bRgb24 ---- RGB24格式的图象数据
     //     nWidth ---- 图象数据宽度（象素单位）
     //     nHeight ---- 图象数据高度（象素单位）
     // 输出参数：sFaceResult ---- 结构体存放检测到的人脸参数（人脸及眼睛等坐标位置及角度等，调用前必须分配有效的空间）
@@ -66,8 +83,8 @@ public class AiChlFace {
 
     // 检测多人脸
     // 输入参数：
-	//        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
-	//        bRgb24 ---- RGB24格式的图象数据
+    //        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //        bRgb24 ---- RGB24格式的图象数据
     //        nWidth ---- 图象数据宽度（象素单位）
     //        nHeight ---- 图象数据高度（象素单位）
     //        nMaxFace ---- 最多支持的人脸个数
@@ -103,8 +120,8 @@ public class AiChlFace {
 
     // 提取特征码
     // 输入参数：
-	//        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
-	//        bRgb24 ---- RGB24格式的图象数据
+    //        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //        bRgb24 ---- RGB24格式的图象数据
     //        nWidth ---- 图象数据宽度
     //        nHeight ---- 图象数据高度
     //        sFaceResult ---- 检测到的人脸参数（必须将检测人脸返回的结果原样传入）
@@ -114,8 +131,8 @@ public class AiChlFace {
 
     // 一对一特征比对
     // 输入参数：
-	//        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
-	//        bFeature1 ---- 第1个人脸特征
+    //        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //        bFeature1 ---- 第1个人脸特征
     //        bFeature2 ---- 第2个人脸特征
     // 返回：返回两个人脸特征对应的人脸的相似度（0-100）
     public static native int FeatureCompare(int nChannelNo, byte[] bFeature1, byte[] bFeature2);
@@ -159,7 +176,7 @@ public class AiChlFace {
 
     // 一对多特征比对
     // 输入参数：
-	//        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //        nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
     //        hList ---- 存放要参与比较的目标特征库的特征比对列表句柄
     //        bFeature ---- 要参与特征比对的源特征码
     //        nPosBegin ---- 要参与比对的目标特征的起始位置（如果比对全部目标特征，则起始位置填0）
@@ -183,7 +200,7 @@ public class AiChlFace {
 
     // 活体检测
     // 输入参数：
-	//           nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //           nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
     //           nWidth ---- 图象数据宽度（象素单位）
     //           nHeight ---- 图象数据高度（象素单位）
     //           bColorRgb24 ---- RGB24格式的彩色图象数据
@@ -286,7 +303,7 @@ public class AiChlFace {
             System.loadLibrary("THFacialPos");
             System.loadLibrary("THFaceImage");
             System.loadLibrary("THFeature");
-			System.loadLibrary("THFaceLive");
+            System.loadLibrary("THFaceLive");
             System.loadLibrary("AiChlFace");
         } catch (Throwable e) {
         }

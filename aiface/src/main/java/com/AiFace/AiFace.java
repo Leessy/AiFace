@@ -1,5 +1,9 @@
 package com.AiFace;
 
+import android.content.Context;
+
+import com.leessy.liuc.aiface.CheckLicense;
+
 // 人脸识别认证 SDK 接口类
 public class AiFace {
 
@@ -10,10 +14,23 @@ public class AiFace {
 
     // SDK初始化
     // 输入参数：
-	//     strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
+    //     strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：检测人脸、获取特征大小、提取特征、一对一及一对多等接口都必须在SDK初始化成功后才能调用
-    public static native int AiFaceInit(String strCacheDir);
+    private static native int AiFaceInit(String strCacheDir);
+
+    /**
+     * 封装初始化接口，增加授权写入
+     *
+     * @param context
+     * @param strCacheDir
+     * @return
+     */
+    public static int AiFaceInit(Context context, String strCacheDir) {
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return AiFaceInit(strCacheDir);
+    }
+
 
     // SDK初始化
     // 输入参数： strLibPath ---- SDK依赖的LIB文件所在目录
@@ -270,7 +287,7 @@ public class AiFace {
             System.loadLibrary("THFacialPos");
             System.loadLibrary("THFaceImage");
             System.loadLibrary("THFeature");
-			System.loadLibrary("THFaceLive");
+            System.loadLibrary("THFaceLive");
             System.loadLibrary("AiFace");
         } catch (Throwable e) {
         }

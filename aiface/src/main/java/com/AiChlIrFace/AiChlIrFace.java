@@ -1,5 +1,9 @@
 package com.AiChlIrFace;
 
+import android.content.Context;
+
+import com.leessy.liuc.aiface.CheckLicense;
+
 // 人脸识别认证 SDK 接口类
 public class AiChlIrFace {
 
@@ -14,7 +18,22 @@ public class AiChlIrFace {
     //    strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：附获取SDK版本外的任何接口都必须在SDK初始化成功后才能调用
-    public static native int Init(int nMaxChannelNum, String strCacheDir);
+    private static native int Init(int nMaxChannelNum, String strCacheDir);
+
+    /**
+     * 封装初始化接口，增加授权写入
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @param strCacheDir
+     * @return
+     */
+    public static int Init(Context context, int nMaxChannelNum, String strCacheDir) {
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return Init(nMaxChannelNum, strCacheDir);
+    }
+
+
     // 带调试信息的初始化函数
     public static native int InitDebug(int nMaxChannelNum, String strCacheDir);
 
@@ -226,7 +245,7 @@ public class AiChlIrFace {
     // 备注：本接口仅支持DM2016加密芯片
     public static native int AiDogWriteLicense(byte[] bHwID, byte[] bLicense);
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                                               //
     //  以下为辅助接口                                                                                               //
     //                                                                                                               //
