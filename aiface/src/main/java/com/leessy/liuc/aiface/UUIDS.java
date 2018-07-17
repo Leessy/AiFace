@@ -6,13 +6,10 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.AiFace.AiFace;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.UUID;
 
 /**
  * <p>
@@ -38,7 +35,7 @@ public class UUIDS {
 
     private String uuid;
 
-    public static UUIDS buidleID(Context context) {
+    public static UUIDS instance(Context context) {
         if (device == null) {
             synchronized (UUIDS.class) {
                 if (device == null) {
@@ -145,8 +142,6 @@ public class UUIDS {
                 AiFaceDataUtil.writeSnData(snData);
             }
         }
-
-
         Log.d(TAG, "result uuid:" + uuid);
     }
 
@@ -214,28 +209,6 @@ public class UUIDS {
         }
     }
 
-//    private static String MD5(String s) {
-//        if (!TextUtils.isEmpty(s)) {
-//
-//        }
-//        try {
-//            MessageDigest md = MessageDigest.getInstance("MD5");
-//            byte[] bytes = md.digest(s.getBytes("utf-8"));
-//            return toHex(bytes);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    private static String toHex(byte[] bytes) {
-//        final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
-//        StringBuilder ret = new StringBuilder(bytes.length * 2);
-//        for (int i = 0; i < bytes.length; i++) {
-//            ret.append(HEX_DIGITS[(bytes[i] >> 4) & 0x0f]);
-//            ret.append(HEX_DIGITS[bytes[i] & 0x0f]);
-//        }
-//        return ret.toString();
-//    }
 
     /**
      * 检查加密IC模块 中sn数据

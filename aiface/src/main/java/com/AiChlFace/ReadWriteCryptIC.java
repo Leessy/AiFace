@@ -51,9 +51,14 @@ public class ReadWriteCryptIC {
     public static int WriteCryptIC(byte[] bData, int nLen) {
         int ret = -1;
         if (mDeviceOpened == true) {
-            ret = otgReadClient.I2C_WriteCrypt(bData, nLen);
-            if (ret == 0 || ret == 2) ret = 0;
+            if (otgReadClient != null)
+                ret = otgReadClient.I2C_WriteCrypt(bData, nLen);
+            else if (mSerialPortReadClient != null) {
+                ret = mSerialPortReadClient.I2C_WriteCrypt(bData, nLen);
+                if (ret == 0 || ret == 2) ret = 0;
+            }
         }
+
 
         if (ret == 0) {
             String str = "Data:";
