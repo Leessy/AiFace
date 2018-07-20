@@ -33,6 +33,11 @@ public class AiChlFace {
         CheckLicense.UpDateLicense(context, strCacheDir);
         return Init(nMaxChannelNum, strCacheDir);
     }
+    public static int Init(Context context, int nMaxChannelNum) {
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return Init(nMaxChannelNum, strCacheDir);
+    }
 
     // SDK初始化
     // 输入参数：

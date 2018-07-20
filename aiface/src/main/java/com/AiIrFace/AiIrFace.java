@@ -29,7 +29,11 @@ public class AiIrFace {
         CheckLicense.UpDateLicense(context, strCacheDir);
         return AiFaceInit(strCacheDir);
     }
-
+    public static int AiFaceInit(Context context) {
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return AiFaceInit(strCacheDir);
+    }
     // 带调试信息的初始化函数
     public static native int AiFaceInitDebug(String strCacheDir);
 

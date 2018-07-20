@@ -30,6 +30,11 @@ public class AiFace {
         CheckLicense.UpDateLicense(context, strCacheDir);
         return AiFaceInit(strCacheDir);
     }
+    public static int AiFaceInit(Context context) {
+         String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return AiFaceInit(strCacheDir);
+    }
 
 
     // SDK初始化

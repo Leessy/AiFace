@@ -1,14 +1,17 @@
 package com.leessy.liuc.aiface;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.AiChlFace.AiChlFace;
 import com.AiChlIrFace.AiChlIrFace;
 import com.AiFace.AiFace;
 import com.AiIrFace.AiIrFace;
 
-public class AiFaceDataUtil {
+import java.util.Arrays;
 
+public class AiFaceDataUtil {
+    private static final String TAG = "AiFaceDataUtil";
     /**
      * 读取存储数据最大长度
      */
@@ -29,9 +32,9 @@ public class AiFaceDataUtil {
         }
         if (AiFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
-            ret = 0;
         } else if (AiChlFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
+            ret = 0;
+        } else if (AiIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
         } else if (AiChlIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
@@ -51,13 +54,14 @@ public class AiFaceDataUtil {
             return ret;
         }
 
+        byte[] bytes = sn.getBytes();
         if (AiFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.AiDogReadData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiChlFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlFace.AiDogReadData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlIrFace.AiDogReadData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiChlIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
         }
         return ret;

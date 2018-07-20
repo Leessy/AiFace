@@ -33,6 +33,11 @@ public class AiChlIrFace {
         return Init(nMaxChannelNum, strCacheDir);
     }
 
+    public static int Init(Context context, int nMaxChannelNum) {
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        return Init(nMaxChannelNum, strCacheDir);
+    }
 
     // 带调试信息的初始化函数
     public static native int InitDebug(int nMaxChannelNum, String strCacheDir);

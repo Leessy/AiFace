@@ -27,9 +27,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs/cardsdk5.7.5.jar')
-    implementation files('libs/libcommon.jar')
-    implementation files('libs/libuvccamera.jar')
-    implementation files('libs/usbCameraCommon.jar')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api files('libs/cardsdk5.7.5.jar')
+    api files('libs/libcommon.jar')
+    api files('libs/libuvccamera.jar')
+    api files('libs/usbCameraCommon.jar')
 }
