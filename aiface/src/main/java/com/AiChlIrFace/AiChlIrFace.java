@@ -6,6 +6,7 @@ import com.leessy.liuc.aiface.CheckLicense;
 
 // 人脸识别认证 SDK 接口类
 public class AiChlIrFace {
+    public static int inits = -100;//初始化状态记录
 
     // 获取SDK版本（可不调用）
     // 返回：SDK版本号
@@ -21,22 +22,31 @@ public class AiChlIrFace {
     private static native int Init(int nMaxChannelNum, String strCacheDir);
 
     /**
-     * 封装初始化接口，增加授权写入
+     * 封装初始化接口
      *
      * @param context
      * @param nMaxChannelNum
      * @param strCacheDir
      * @return
      */
+    @Deprecated
     public static int Init(Context context, int nMaxChannelNum, String strCacheDir) {
         CheckLicense.UpDateLicense(context, strCacheDir);
         return Init(nMaxChannelNum, strCacheDir);
     }
 
+    /**
+     * 封装初始化接口
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @return
+     */
     public static int Init(Context context, int nMaxChannelNum) {
         String strCacheDir = context.getCacheDir().getAbsolutePath();
         CheckLicense.UpDateLicense(context, strCacheDir);
-        return Init(nMaxChannelNum, strCacheDir);
+        inits = Init(nMaxChannelNum, strCacheDir);
+        return inits;
     }
 
     // 带调试信息的初始化函数

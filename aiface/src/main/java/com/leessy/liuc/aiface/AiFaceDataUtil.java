@@ -21,6 +21,8 @@ public class AiFaceDataUtil {
 
     /**
      * 读出全部数据
+     * <p>
+     * 根据 调用init方法的结果来进行准确调用
      *
      * @param bytes 读取数据内容
      * @return 读取成功 返回 0,失败返回其他
@@ -30,13 +32,13 @@ public class AiFaceDataUtil {
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return ret;
         }
-        if (AiFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
+        if (AiFace.inits == 0 && AiFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
+        } else if (AiChlFace.inits == 0 && AiChlFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
+        } else if (AiIrFace.inits == 0 && AiIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
+        } else if (AiChlIrFace.inits == 0 && AiChlIrFace.AiDogReadData(bytes, MAX_LENGTH) == 0) {
             ret = 0;
         }
         return ret;
@@ -55,13 +57,13 @@ public class AiFaceDataUtil {
         }
 
         byte[] bytes = sn.getBytes();
-        if (AiFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        if (AiFace.inits == 0 && AiFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiChlFace.inits == 0 && AiChlFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiIrFace.inits == 0 && AiIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
+        } else if (AiChlIrFace.inits == 0 && AiChlIrFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
         }
         return ret;
@@ -90,13 +92,13 @@ public class AiFaceDataUtil {
             uuid = "0000000000000000";//UUID 为空时默认数据
         }
         String data = uuid + SerialNumber;
-        if (AiFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        if (AiFace.inits == 0 && AiFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiIrFace.inits == 0 && AiIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiChlFace.inits == 0 && AiChlFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiChlIrFace.inits == 0 && AiChlIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
         }
         return ret;

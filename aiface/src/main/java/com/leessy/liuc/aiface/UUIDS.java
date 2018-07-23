@@ -99,9 +99,9 @@ public class UUIDS {
     public void check() {
         preferences = context.getSharedPreferences(DEFAULT_NAME, 0);
         uuid = preferences.getString(DEFAULT_DEVICE_ID, null);
-
+        String snData = "";
         if (TextUtils.isEmpty(uuid)) {
-            String snData = checkAiFaceSnData();
+            snData = checkAiFaceSnData();
             if (!TextUtils.isEmpty(snData) && snData.length() == SN_DATA_LENGTH) {
                 uuid = snData;
                 preferences.edit().putString(DEFAULT_DEVICE_ID, uuid).apply();
@@ -138,7 +138,7 @@ public class UUIDS {
             }
 
             //之前有数据，IC无数据重新写入
-            String snData = checkAiFaceSnData();
+//            String snData = checkAiFaceSnData();
             if (TextUtils.isEmpty(snData) || snData.length() != SN_DATA_LENGTH) {
                 AiFaceDataUtil.writeSnData(snData);
             }
