@@ -24,22 +24,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void write(View view) {
-        int a = AiFaceDataUtil.writeSnData("A123456798VVVVBB");
-        Log.d(TAG, "write: =" + a);
+//        int a = AiFaceDataUtil.writeSnData("A123456798VVVVBB");
+//        Log.d(TAG, "write: =" + a);
 
-//        String s = "A123456798AAAABB";
-//        int i = AiChlFace.AiDogWriteData(s.getBytes(), s.getBytes().length);
-//        int i2 = AiFace.AiDogWriteData(s.getBytes(), s.getBytes().length);
-//        Log.d(TAG, "write: =" + i);
-//        Log.d(TAG, "write: =" + i2);
+        int a = AiFaceDataUtil.writeSerialNumber("AAAAAAAADAAAAAAA");
+        Log.d(TAG, "write: 写入DN=" + a);
     }
 
     public void read(View view) {
-        String uuid = UUIDS.getUUID();
-        Log.d(TAG, "read: uuid=" + uuid);
-//        byte[] bytes = new byte[64];
-//        int i = AiChlFace.AiDogReadData(bytes, 64);
-//        Log.d(TAG, "read: i=" + i + "----" + Arrays.toString(bytes));
+//        String uuid = UUIDS.getUUID();
+//        Log.d(TAG, "read: uuid=" + uuid);
+        String serialNumber = UUIDS.getSerialNumber();
+        Log.d(TAG, "read: 读取DN=" + serialNumber);
+
+        byte[] bytes = new byte[64];
+        int i = AiChlFace.AiDogReadData(bytes, 64);
+        Log.d(TAG, "read: i=" + i + "----" + Arrays.toString(bytes));
     }
 
     public void sdk(View view) {

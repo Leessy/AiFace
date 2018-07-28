@@ -17,7 +17,7 @@ public class AiFaceDataUtil {
      */
     public static final int MAX_LENGTH = 64;
     public static final int SN_MAX_LENGTH = 16;
-    public static final int SERIAL_NUMBER_MAX_LENGTH = 8;
+    public static final int SERIAL_NUMBER_MAX_LENGTH = 16;
 
     /**
      * 读出全部数据
@@ -55,8 +55,6 @@ public class AiFaceDataUtil {
         if (TextUtils.isEmpty(sn) || sn.length() != SN_MAX_LENGTH) {
             return ret;
         }
-
-        byte[] bytes = sn.getBytes();
         if (AiFace.inits == 0 && AiFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
             ret = 0;
         } else if (AiChlFace.inits == 0 && AiChlFace.AiDogWriteData(sn.getBytes(), SN_MAX_LENGTH) == 0) {
@@ -92,13 +90,14 @@ public class AiFaceDataUtil {
             uuid = "0000000000000000";//UUID 为空时默认数据
         }
         String data = uuid + SerialNumber;
+        Log.d(TAG, "writeSerialNumber: 开始写入 data=" + data);
         if (AiFace.inits == 0 && AiFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiIrFace.inits == 0 && AiIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiIrFace.inits == 0 && AiIrFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlFace.inits == 0 && AiChlFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiChlFace.inits == 0 && AiChlFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
-        } else if (AiChlIrFace.inits == 0 && AiChlIrFace.AiDogReadData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
+        } else if (AiChlIrFace.inits == 0 && AiChlIrFace.AiDogWriteData(data.getBytes(), SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH) == 0) {
             ret = 0;
         }
         return ret;
@@ -114,11 +113,11 @@ public class AiFaceDataUtil {
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return "";
         }
-        return new String(bytes, 0, 16).trim();
+        return new String(bytes, 0, SN_MAX_LENGTH).trim();
     }
 
     /**
-     * 截取 设备编号 16-24
+     * 截取 设备编号 16-32
      *
      * @param bytes
      * @return
@@ -127,6 +126,6 @@ public class AiFaceDataUtil {
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return "";
         }
-        return new String(bytes, 16, 8).trim();
+        return new String(bytes, SN_MAX_LENGTH, SERIAL_NUMBER_MAX_LENGTH).trim();
     }
 }
