@@ -113,7 +113,11 @@ public class AiFaceDataUtil {
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return "";
         }
-        return new String(bytes, 0, SN_MAX_LENGTH).trim();
+        String trim = new String(bytes, 0, SN_MAX_LENGTH).trim();
+        if (trim.equals("0000000000000000")) {
+            return "";
+        }
+        return trim;
     }
 
     /**
@@ -126,6 +130,10 @@ public class AiFaceDataUtil {
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return "";
         }
-        return new String(bytes, SN_MAX_LENGTH, SERIAL_NUMBER_MAX_LENGTH).trim();
+        String trim = new String(bytes, SN_MAX_LENGTH, SERIAL_NUMBER_MAX_LENGTH).trim();
+        if (trim.equals("0000000000000000")) {
+            return "";
+        }
+        return trim;
     }
 }

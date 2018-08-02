@@ -98,15 +98,7 @@ public class UUIDS {
 
     public void check() {
         preferences = context.getSharedPreferences(DEFAULT_NAME, 0);
-        uuid = preferences.getString(DEFAULT_DEVICE_ID, null);
-        String snData = "";
-        if (TextUtils.isEmpty(uuid)) {
-            snData = checkAiFaceSnData();
-            if (!TextUtils.isEmpty(snData) && snData.length() == SN_DATA_LENGTH) {
-                uuid = snData;
-                preferences.edit().putString(DEFAULT_DEVICE_ID, uuid).apply();
-            }
-        }
+        uuid = preferences.getString(DEFAULT_DEVICE_ID, "");
 
         if (TextUtils.isEmpty(uuid)) {
             if (checkAndroidFile() == null) {
@@ -120,30 +112,23 @@ public class UUIDS {
                 saveDCIMFile(uuid);
                 Log.d(TAG, "DCIM directory was not found in UUID, from the Android directory to take out UUID");
             }
-
-            uuid = checkAndroidFile();
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(DEFAULT_DEVICE_ID, uuid);
-            editor.apply();
-
+            if (!TextUtils.isEmpty(uuid)) {
+                preferences.edit().putString(DEFAULT_DEVICE_ID, uuid).apply();
+            }
             Log.d(TAG, "save uuid SharePref:" + uuid);
-        } else {
-
-            if (checkAndroidFile() == null) {
-                saveAndroidFile(uuid);
-            }
-
-            if (checkDCIMFile() == null) {
-                saveDCIMFile(uuid);
-            }
-
-            //之前有数据，IC无数据重新写入
-//            String snData = checkAiFaceSnData();
-            if (TextUtils.isEmpty(snData) || snData.length() != SN_DATA_LENGTH) {
-                AiFaceDataUtil.writeSnData(snData);
-            }
         }
-        Log.d(TAG, "result uuid:" + uuid);
+
+        String snData = checkAiFaceSnData();
+        //IC数据为空 从文件写入
+        if (TextUtils.isEmpty(snData)) {
+            if (!TextUtils.isEmpty(uuid)) {
+                AiFaceDataUtil.writeSnData(uuid);
+            }
+        } else {
+            saveAndroidFile(snData);
+            saveDCIMFile(snData);
+            preferences.edit().putString(DEFAULT_DEVICE_ID, snData).apply();
+        }
     }
 
     private String checkAndroidFile() {
