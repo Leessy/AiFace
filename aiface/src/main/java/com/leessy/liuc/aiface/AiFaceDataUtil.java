@@ -28,6 +28,9 @@ public class AiFaceDataUtil {
      * @return 读取成功 返回 0,失败返回其他
      */
     public static int readData64(byte[] bytes) {
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = 48;
+        }
         int ret = -1;
         if (bytes == null || bytes.length != MAX_LENGTH) {
             return ret;
@@ -114,7 +117,7 @@ public class AiFaceDataUtil {
             return "";
         }
         String trim = new String(bytes, 0, SN_MAX_LENGTH).trim();
-        if (trim.equals("0000000000000000")) {
+        if (trim.equals("0000000000000000") || trim.length() != 16) {
             return "";
         }
         return trim;
