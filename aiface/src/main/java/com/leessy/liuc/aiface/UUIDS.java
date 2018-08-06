@@ -99,25 +99,25 @@ public class UUIDS {
     public void check() {
         preferences = context.getSharedPreferences(DEFAULT_NAME, 0);
         uuid = preferences.getString(DEFAULT_DEVICE_ID, "");
-
         if (TextUtils.isEmpty(uuid)) {
-            if (checkAndroidFile() == null) {
+            uuid = checkAndroidFile();
+            if (TextUtils.isEmpty(uuid)) {
                 uuid = checkDCIMFile();
                 saveAndroidFile(uuid);
                 Log.d(TAG, "Android directory was not found in UUID, from the DCIM directory to take out UUID\n");
             }
-
-            if (checkDCIMFile() == null) {
+            uuid = checkDCIMFile();
+            if (TextUtils.isEmpty(uuid)) {
                 uuid = checkAndroidFile();
                 saveDCIMFile(uuid);
                 Log.d(TAG, "DCIM directory was not found in UUID, from the Android directory to take out UUID");
             }
+
             if (!TextUtils.isEmpty(uuid)) {
                 preferences.edit().putString(DEFAULT_DEVICE_ID, uuid).apply();
             }
             Log.d(TAG, "save uuid SharePref:" + uuid);
         }
-
         String snData = checkAiFaceSnData();
         //IC数据为空 从文件写入
         if (TextUtils.isEmpty(snData)) {

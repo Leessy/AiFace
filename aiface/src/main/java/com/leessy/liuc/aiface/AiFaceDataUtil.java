@@ -113,10 +113,13 @@ public class AiFaceDataUtil {
      * @return
      */
     public static String getUUID(byte[] bytes) {
-        if (bytes == null || bytes.length != MAX_LENGTH) {
+        if (bytes == null || bytes.length != MAX_LENGTH || !checkChars(bytes)) {
             return "";
         }
         String trim = new String(bytes, 0, SN_MAX_LENGTH).trim();
+        Log.d(TAG, "getUUID: ==" + trim);
+        Log.d(TAG, "getUUID: ==" + trim.length());
+        Log.d(TAG, "getUUID: ==" + trim.equals("0000000000000000"));
         if (trim.equals("0000000000000000") || trim.length() != 16) {
             return "";
         }
@@ -130,7 +133,7 @@ public class AiFaceDataUtil {
      * @return
      */
     public static String getSerialNumber(byte[] bytes) {
-        if (bytes == null || bytes.length != MAX_LENGTH) {
+        if (bytes == null || bytes.length != MAX_LENGTH || !checkChars(bytes)) {
             return "";
         }
         String trim = new String(bytes, SN_MAX_LENGTH, SERIAL_NUMBER_MAX_LENGTH).trim();
@@ -138,5 +141,20 @@ public class AiFaceDataUtil {
             return "";
         }
         return trim;
+    }
+
+    /**
+     * 检验非法字符
+     *
+     * @param bytes
+     * @return 含有非法字符 false
+     */
+    private static boolean checkChars(byte[] bytes) {
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] < 48 || bytes[i] > 122) {
+                return false;
+            }
+        }
+        return true;
     }
 }

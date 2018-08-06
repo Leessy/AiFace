@@ -32,12 +32,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void read(View view) {
-//        String uuid = UUIDS.getUUID();
-//        Log.d(TAG, "read: uuid=" + uuid);
-        String serialNumber = UUIDS.getSerialNumber();
-        Log.d(TAG, "read: 读取DN=" + serialNumber);
+        byte[] bytes1 = "asd03 0123AZSCVacsad".getBytes();
+        for (int i = 0; i < bytes1.length; i++) {
+            Log.d(TAG, "read: =" + bytes1[i]);
+        }
+
+        String uuid = UUIDS.getUUID();
+        Log.d(TAG, "read: uuid=" + uuid);
+//        String serialNumber = UUIDS.getSerialNumber();
+//        Log.d(TAG, "read: 读取DN=" + serialNumber);
 
         byte[] bytes = new byte[64];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = 48;
+        }
         int i = AiChlFace.AiDogReadData(bytes, 64);
         Log.d(TAG, "read: i=" + i + "----" + Arrays.toString(bytes));
     }
@@ -53,5 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void check(View view) {
         UUIDS.instance(getApplicationContext()).check();
+    }
+
+    /**
+     * 检验非法字符
+     *
+     * @param bytes
+     * @return
+     */
+    private static boolean checkChars(byte[] bytes) {
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] > 122 || bytes[i] < 48) {
+                return false;
+            }
+        }
+        return true;
     }
 }
