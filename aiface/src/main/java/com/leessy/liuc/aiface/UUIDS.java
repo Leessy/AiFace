@@ -104,7 +104,7 @@ public class UUIDS {
             if (TextUtils.isEmpty(uuid)) {
                 uuid = checkDCIMFile();
                 saveAndroidFile(uuid);
-                Log.d(TAG, "Android directory was not found in UUID, from the DCIM directory to take out UUID\n");
+                Log.d(TAG, "Android directory was not found in UUID, from the DCIM directory to take out UUID");
             }
             uuid = checkDCIMFile();
             if (TextUtils.isEmpty(uuid)) {
@@ -119,6 +119,7 @@ public class UUIDS {
             Log.d(TAG, "save uuid SharePref:" + uuid);
         }
         String snData = checkAiFaceSnData();
+        Log.d(TAG, "check: snData==" + snData);
         //IC数据为空 从文件写入
         if (TextUtils.isEmpty(snData)) {
             if (!TextUtils.isEmpty(uuid)) {

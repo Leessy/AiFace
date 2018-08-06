@@ -27,16 +27,17 @@ public class MainActivity extends AppCompatActivity {
 //        int a = AiFaceDataUtil.writeSnData("A123456798VVVVBB");
 //        Log.d(TAG, "write: =" + a);
 
-        int a = AiFaceDataUtil.writeSerialNumber("AAAAAAAADAAAAAAA");
-        Log.d(TAG, "write: 写入DN=" + a);
+//        int a = AiFaceDataUtil.writeSerialNumber("AAAAAAAADAAAAAAA");
+//        Log.d(TAG, "write: 写入DN=" + a);
     }
 
     public void read(View view) {
-        byte[] bytes1 = "asd03 0123AZSCVacsad".getBytes();
-        for (int i = 0; i < bytes1.length; i++) {
-            Log.d(TAG, "read: =" + bytes1[i]);
-        }
+//        byte[] bytes1 = "asd03 0123AZSCVacsad".getBytes();
+//        for (int i = 0; i < bytes1.length; i++) {
+//            Log.d(TAG, "read: =" + bytes1[i]);
+//        }
 
+        UUIDS.instance(this).check();
         String uuid = UUIDS.getUUID();
         Log.d(TAG, "read: uuid=" + uuid);
 //        String serialNumber = UUIDS.getSerialNumber();

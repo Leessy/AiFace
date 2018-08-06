@@ -113,7 +113,7 @@ public class AiFaceDataUtil {
      * @return
      */
     public static String getUUID(byte[] bytes) {
-        if (bytes == null || bytes.length != MAX_LENGTH || !checkChars(bytes)) {
+        if (bytes == null || bytes.length != MAX_LENGTH || !checkChars(bytes, SN_MAX_LENGTH)) {
             return "";
         }
         String trim = new String(bytes, 0, SN_MAX_LENGTH).trim();
@@ -133,7 +133,7 @@ public class AiFaceDataUtil {
      * @return
      */
     public static String getSerialNumber(byte[] bytes) {
-        if (bytes == null || bytes.length != MAX_LENGTH || !checkChars(bytes)) {
+        if (bytes == null || bytes.length != MAX_LENGTH || !checkCharsSerialNumber(bytes, SN_MAX_LENGTH, SN_MAX_LENGTH + SERIAL_NUMBER_MAX_LENGTH)) {
             return "";
         }
         String trim = new String(bytes, SN_MAX_LENGTH, SERIAL_NUMBER_MAX_LENGTH).trim();
@@ -149,8 +149,17 @@ public class AiFaceDataUtil {
      * @param bytes
      * @return 含有非法字符 false
      */
-    private static boolean checkChars(byte[] bytes) {
-        for (int i = 0; i < bytes.length; i++) {
+    private static boolean checkChars(byte[] bytes, int length) {
+        for (int i = 0; i < length; i++) {
+            if (bytes[i] < 48 || bytes[i] > 122) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean checkCharsSerialNumber(byte[] bytes, int start, int length) {
+        for (int i = start; i < length; i++) {
             if (bytes[i] < 48 || bytes[i] > 122) {
                 return false;
             }
