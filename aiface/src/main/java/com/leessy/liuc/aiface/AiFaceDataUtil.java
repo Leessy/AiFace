@@ -117,9 +117,6 @@ public class AiFaceDataUtil {
             return "";
         }
         String trim = new String(bytes, 0, SN_MAX_LENGTH).trim();
-        Log.d(TAG, "getUUID: ==" + trim);
-        Log.d(TAG, "getUUID: ==" + trim.length());
-        Log.d(TAG, "getUUID: ==" + trim.equals("0000000000000000"));
         if (trim.equals("0000000000000000") || trim.length() != 16) {
             return "";
         }

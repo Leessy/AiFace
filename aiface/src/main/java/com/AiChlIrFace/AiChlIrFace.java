@@ -13,41 +13,65 @@ public class AiChlIrFace {
     // 备注：可不调用，任何时候均可调用
     public static native int Ver();
 
+    // 设置认证方式
+    // 输入参数：
+    //     nAuthType ---- 认证方式：0-USB加密狗认证，2-板载加密芯片认证，3-读卡器加密芯片认证，其它-保留
+    //     nUsbDogHandle ---- USB加密狗认证时指定加密狗设备句柄，需据此才能操作USB加密狗设备（可参考DEMO例程请求权限并获取设备句柄）
+    //                        非USB加密狗认证时本参数无意义，可指定任何值
+    // 备注：必须在SDK初始化前调用才有效
+    public static native void SetAuth(int nAuthType, int nUsbDogHandle);
+
+    /**
+     * 封装初始化接口
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @return
+     */
+    public static int InitCardLicense(Context context, int nMaxChannelNum) {
+        SetAuth(3, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        inits = Init(nMaxChannelNum, strCacheDir);
+        return inits;
+    }
+
+    /**
+     * 封装初始化接口
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @return
+     */
+    public static int InitDm2016License(Context context, int nMaxChannelNum) {
+        SetAuth(2, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        CheckLicense.UpDateLicense(context, strCacheDir);
+        inits = Init(nMaxChannelNum, strCacheDir);
+        return inits;
+    }
+
+    /**
+     * 封装初始化接口
+     *
+     * @param context
+     * @param nMaxChannelNum
+     * @return
+     */
+    public static int InitDebug(Context context, int nMaxChannelNum) {
+        SetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        return Init(nMaxChannelNum, strCacheDir);
+
+    }
+
     // SDK初始化
     // 输入参数：
     //    nMaxChannelNum ---- 需要开启的最大通道数（受加密狗控制）
     //    strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：附获取SDK版本外的任何接口都必须在SDK初始化成功后才能调用
-    private static native int Init(int nMaxChannelNum, String strCacheDir);
-
-    /**
-     * 封装初始化接口
-     *
-     * @param context
-     * @param nMaxChannelNum
-     * @param strCacheDir
-     * @return
-     */
-    @Deprecated
-    public static int Init(Context context, int nMaxChannelNum, String strCacheDir) {
-        CheckLicense.UpDateLicense(context, strCacheDir);
-        return Init(nMaxChannelNum, strCacheDir);
-    }
-
-    /**
-     * 封装初始化接口
-     *
-     * @param context
-     * @param nMaxChannelNum
-     * @return
-     */
-    public static int Init(Context context, int nMaxChannelNum) {
-        String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir);
-        inits = Init(nMaxChannelNum, strCacheDir);
-        return inits;
-    }
+    public static native int Init(int nMaxChannelNum, String strCacheDir);
 
     // 带调试信息的初始化函数
     public static native int InitDebug(int nMaxChannelNum, String strCacheDir);
@@ -173,15 +197,17 @@ public class AiChlIrFace {
     //                                                                                                               //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // 活体检测
+    // 标准活体检测（需要双模彩色和红外图象）
     // 输入参数：
-    //           nChannelNo ---- 通道号（0 ~ nMaxChannelNum - 1）
+    //           nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
     //           nWidth ---- 图象数据宽度（象素单位）
     //           nHeight ---- 图象数据高度（象素单位）
     //           bColorRgb24 ---- RGB24格式的彩色图象数据
-    //           sColorFaceResult ---- 彩色图象检测出的人脸参数（调用 AiFaceDetectFace 对彩色图象检测出的结果）
+    //           sColorFaceResult ---- 彩色图象检测出的人脸参数（调用 DetectFace 对彩色图象检测出的结果）
+    //           nColorLeftEyeX, nColorLeftEyeY, nColorRightEyeX, nColorRightEyeY ---- 彩色图象检测出的左右眼坐标（支持第三方人脸检测算法对彩色图象检测出的人眼坐标）
     //           bBwRgb24 ---- RGB24格式的黑白图象数据
-    //           sBwFaceResult ---- 黑白图象检测出的人脸参数（调用 AiFaceDetectFace 对黑白图象检测出的结果）
+    //           sBwFaceResult ---- 黑白图象检测出的人脸参数（调用 DetectFace 对黑白图象检测出的结果）
+    //           nBWLeftEyeX, nBWLeftEyeY, nBWRightEyeX, nBWRightEyeY ---- 黑白图象检测出的左右眼坐标（支持第三方人脸检测算法对黑白图象检测出的人眼坐标）
     // 输出参数：无
     // 返回值：
     //    1 ---- 已确认是活体,本轮结果无需继续检测
@@ -190,9 +216,47 @@ public class AiChlIrFace {
     //   -2 ---- 参数错误
     //   -3 ---- 内部错误
     // 备注：
-    //    1. 需要同时对黑白图象和彩色图象进行人脸检测，并且都能检测到人脸，然后将检测结果传入
-    //    2. 过程中只要一次确认是活体，则本次结果确认为活体；如超时仍无一次确认是活体，则本次结果确认为非活体
+    //    1. LiveDetect 需要同时对黑白图象和彩色图象进行人脸检测，并且都能检测到人脸，然后将检测结果传入（内部不需要再检测人脸直接判别是否活体）；如果只有一个图象能检测到活体，则视为非活体
+    //    2. LiveDetectColor / LiveDetectColorEyes 只需要对彩色图象进行人脸检测，并能检测到人脸，然后将检测结果传入（内部会先对黑白图象检测人脸然后判别是否活体）；如果彩色图象不能检测到活体，则视为非活体
+    //    3. LiveDetectBW / LiveDetectBWEyes 只需要对黑白图象进行人脸检测，并能检测到人脸，然后将检测结果传入（内部会先对彩色图象检测人脸然后判别是否活体）；如果黑白图象不能检测到活体，则视为非活体
+    //    4. LiveDetect 不需要对图象进行人脸检测，只需要传入彩色和黑白图象（内部会先对两个图象检测人脸然后判别是否活体）
+    //    5. 过程中只要一次确认是活体，则本次结果确认为活体；如超时仍无一次确认是活体，则本次结果确认为非活体
     public static native int LiveDetect(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, FACE_DETECT_RESULT sColorFaceResult, byte[] bBwRgb24, FACE_DETECT_RESULT sBwFaceResult);
+
+    public static native int LiveDetectColor(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, FACE_DETECT_RESULT sColorFaceResult, byte[] bBwRgb24);
+
+    public static native int LiveDetectColorEyes(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, int nColorLeftEyeX, int nColorLeftEyeY, int nColorRightEyeX, int nColorRightEyeY, byte[] bBwRgb24);
+
+    public static native int LiveDetectBW(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, byte[] bBwRgb24, FACE_DETECT_RESULT sBwFaceResult);
+
+    public static native int LiveDetectBWEyes(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, byte[] bBwRgb24, int nBwLeftEyeX, int nBWLeftEyeY, int nBwRightEyeX, int nBwRightEyeY);
+
+    public static native int LiveDetectImg(int nChannelNo, int nWidth, int nHeight, byte[] bColorRgb24, byte[] bBwRgb24);
+
+    // 简化快速活体检测（只需要红外图象）
+    // 输入参数：
+    //           nChannelNo ----  通道号(0 ~ nMaxChannelNum - 1)
+    //           nWidth ---- 图象数据宽度（象素单位）
+    //           nHeight ---- 图象数据高度（象素单位）
+    //           bBwRgb24 ---- RGB24格式的黑白图象数据
+    //           sBwFaceResult ---- 黑白图象检测出的人脸参数（调用 DetectFace 对黑白图象检测出的结果）
+    //           nBWLeftEyeX, nBWLeftEyeY, nBWRightEyeX, nBWRightEyeY ---- 黑白图象检测出的左右眼坐标（支持第三方人脸检测算法对黑白图象检测出的人眼坐标）
+    // 输出参数：无
+    // 返回值：
+    //    1 ---- 已确认是活体,本轮结果无需继续检测
+    //    0 ---- 本帧不确认是活体,需继续检测
+    //   -1 ---- 活体检测功能未授权
+    //   -2 ---- 参数错误
+    //   -3 ---- 内部错误
+    // 备注：
+    //    1. QuickLiveDetect 需要对黑白图象进行人脸检测，并能检测到人脸，然后将检测结果传入（内部不需要再检测人脸直接判别是否活体）；如果黑白图象不能检测到活体，则视为非活体
+    //    2. QuickLiveImg 不需要对图象进行人脸检测，直接传入黑白图象（内部会先对黑白图象检测人脸然后判别是否活体）
+    //    3. 过程中只要一次确认是活体，则本次结果确认为活体；如超时仍无一次确认是活体，则本次结果确认为非活体
+    public static native int QuickLiveDetect(int nChannelNo, int nWidth, int nHeight, byte[] bBwRgb24, FACE_DETECT_RESULT sBwFaceResult);
+
+    public static native int QuickLiveDetectEyes(int nChannelNo, int nWidth, int nHeight, byte[] bBwRgb24, int nBwLeftEyeX, int nBWLeftEyeY, int nBwRightEyeX, int nBwRightEyeY);
+
+    public static native int QuickLiveDetectImg(int nChannelNo, int nWidth, int nHeight, byte[] bBwRgb24);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                                               //
@@ -236,7 +300,6 @@ public class AiChlIrFace {
     // 输入参数：无
     // 输出参数：bHwID ---- 返回加密狗的唯一ID（8字节二进制数据，调用前必须预分配8字节缓冲区）
     // 返回值：无
-    // 备注：对于DM2016加密芯片，需先调用AiDogWriteLicense写入了唯一ID，否则返回的ID无效
     public static native void AiDogGetID(byte[] bHwID);
 
     // 将应用所需的加密数据写入加密狗中
@@ -251,14 +314,6 @@ public class AiChlIrFace {
     // 输出参数：bData ---- 返回读出的加密狗中的加密数据
     // 返回值：返回0表示读数据成功，其它表示读数据失败
     public static native int AiDogReadData(byte[] bData, int nReadLen);
-
-    // 写加密狗的授权数据
-    // 输入参数： bHwID ---- 要写入加密狗中的加密狗唯一ID
-    //            bLicense ---- 要写入加密狗中的授权数据（授权数据必需由特征工具生成，长度为56字节）
-    // 输出参数：无
-    // 返回值：返回0表示写入授权数据成功，-1表示写入授权数据失败
-    // 备注：本接口仅支持DM2016加密芯片
-    public static native int AiDogWriteLicense(byte[] bHwID, byte[] bLicense);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                                               //
