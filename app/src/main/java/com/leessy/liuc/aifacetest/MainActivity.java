@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    //test
     public void write(View view) {
 //        int a = AiFaceDataUtil.writeSnData("A123456798VVVVBB");
 //        Log.d(TAG, "write: =" + a);
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "write: 写入DN=" + a);
     }
 
+    //test
     public void read(View view) {
 //        byte[] bytes1 = "asd03 0123AZSCVacsad".getBytes();
 //        for (int i = 0; i < bytes1.length; i++) {
@@ -51,15 +53,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "read: i=" + i + "----" + Arrays.toString(bytes));
     }
 
+    //test
     public void sdk(View view) {
         SerialReadClient serialReadClient = SerialReadClient.getInstance();
         int i1 = serialReadClient.openSerialPort("/dev/ttySAC0", 115200);
         Log.d(TAG, "sdk: caer=" + i1);
         ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
-        int i = AiChlFace.Init(getApplicationContext(), 1);
+        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
         Log.d(TAG, "sdk: " + i);
     }
 
+    //test
     public void check(View view) {
         UUIDS.instance(getApplicationContext()).check();
     }

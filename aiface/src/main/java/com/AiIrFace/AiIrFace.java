@@ -30,7 +30,7 @@ public class AiIrFace {
     public static int InitCardLicense(Context context) {
         AiFaceSetAuth(3, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir);
+        CheckLicense.UpDateLicense(context, strCacheDir,3);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -44,7 +44,7 @@ public class AiIrFace {
     public static int InitDm2016License(Context context) {
         AiFaceSetAuth(2, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir);
+        CheckLicense.UpDateLicense(context, strCacheDir,2);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -66,10 +66,10 @@ public class AiIrFace {
     // 输入参数： strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：附获取SDK版本外的任何接口都必须在SDK初始化成功后才能调用
-    public static native int AiFaceInit(String strCacheDir);
+    private static native int AiFaceInit(String strCacheDir);
 
     // 带调试信息的初始化函数
-    public static native int AiFaceInitDebug(String strCacheDir);
+    private static native int AiFaceInitDebug(String strCacheDir);
 
     // SDK反初始化
     // 备注：必须在初始化成功后调用，反初始化后不能再调用除获取SDK版本及SDK初始化外的任何接口

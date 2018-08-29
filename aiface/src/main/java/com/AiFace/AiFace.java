@@ -31,7 +31,7 @@ public class AiFace {
     public static int InitCardLicense(Context context) {
         AiFaceSetAuth(3, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir);
+        CheckLicense.UpDateLicense(context, strCacheDir,3);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -45,7 +45,7 @@ public class AiFace {
     public static int InitDm2016License(Context context) {
         AiFaceSetAuth(2, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir);
+        CheckLicense.UpDateLicense(context, strCacheDir,2);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -69,7 +69,7 @@ public class AiFace {
     //     strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）
     // 返回：成功返回0，许可无效返回-1，算法初始化失败返回-2
     // 备注：检测人脸、获取特征大小、提取特征、一对一及一对多等接口都必须在SDK初始化成功后才能调用
-    public static native int AiFaceInit(String strCacheDir);
+    private static native int AiFaceInit(String strCacheDir);
 
     // SDK初始化
     // 输入参数： strLibPath ---- SDK依赖的LIB文件所在目录

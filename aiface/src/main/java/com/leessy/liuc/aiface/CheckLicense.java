@@ -2,6 +2,7 @@ package com.leessy.liuc.aiface;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.nfc.cardemulation.OffHostApduService;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,8 +15,18 @@ import java.nio.charset.Charset;
 
 public class CheckLicense {
     private static final String TAG = "CheckLicense";//sp文件
-    public static boolean UpDateLicense(Context mContext, String strCacheDir) {
-        if (isLicense(mContext)) {
+    private static final String CARD = "CARD";
+    private static final String DM2016 = "DM2016";
+
+    /**
+     * 授权类型 权限区分判断
+     *
+     * @param mContext
+     * @param strCacheDir
+     * @return
+     */
+    public static boolean UpDateLicense(Context mContext, String strCacheDir, int nAuthType) {
+        if (isLicense(mContext, nAuthType)) {
             android.util.Log.d(TAG, "already write License!!!");
             return false;
         }
@@ -33,13 +44,19 @@ public class CheckLicense {
      * @param context
      * @return
      */
-    private static boolean isLicense(Context context) {
+    private static boolean isLicense(Context context, int nAuthType) {
+        String key = null;
+        if (nAuthType == 2) {
+            key = BuildConfig.VERSION_NAME + CARD;
+        } else if (nAuthType == 3) {
+            key = BuildConfig.VERSION_NAME + DM2016;
+        }
         SharedPreferences preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
-        boolean aBoolean = preferences.getBoolean(BuildConfig.VERSION_NAME, false);
+        boolean aBoolean = preferences.getBoolean(key, false);
         if (aBoolean) {
             return true;
         } else {
-            preferences.edit().putBoolean(BuildConfig.VERSION_NAME, true).apply();
+            preferences.edit().putBoolean(key, true).apply();
             return false;
         }
     }
