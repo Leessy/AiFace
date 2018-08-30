@@ -47,6 +47,7 @@ public class CheckLicense {
     private static boolean isLicense(Context context, int nAuthType) {
         String key = null;
         if (nAuthType == 2) {
+            dm2016();
             key = BuildConfig.VERSION_NAME + CARD;
         } else if (nAuthType == 3) {
             key = BuildConfig.VERSION_NAME + DM2016;
@@ -100,5 +101,33 @@ public class CheckLicense {
             }
         }
         return result;
+    }
+
+    /**
+     * dm2016
+     */
+    private static void dm2016() {
+        DataOutputStream dataOutputStream = null;
+        try {
+            Process process = Runtime.getRuntime().exec("su");
+            dataOutputStream = new DataOutputStream(process.getOutputStream());
+            String command1 = "chmod 777 dev/dm2016\n";
+            dataOutputStream.write(command1.getBytes(Charset.forName("utf-8")));
+            dataOutputStream.flush();
+            dataOutputStream.writeBytes("exit\n");
+            dataOutputStream.flush();
+            process.waitFor();
+        } catch (Exception var17) {
+            android.util.Log.e("CheckLicense dm2016", var17.getMessage(), var17);
+        } finally {
+            try {
+                if (dataOutputStream != null) {
+                    dataOutputStream.close();
+                }
+            } catch (IOException var16) {
+                android.util.Log.e("CheckLicense dm2016", var16.getMessage(), var16);
+            }
+
+        }
     }
 }
