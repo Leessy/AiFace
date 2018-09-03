@@ -2,11 +2,7 @@ package com.leessy.liuc.aiface;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.nfc.cardemulation.OffHostApduService;
 import android.text.TextUtils;
-import android.util.Log;
-
-import com.serenegiant.usb.UVCCamera;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,7 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class CheckLicense {
-    private static final String TAG = "CheckLicense";//sp文件
+    private static final String LCSP = "CheckLicense";//sp文件
     private static final String CARD = "CARD";
     private static final String DM2016 = "DM2016";
 
@@ -27,7 +23,7 @@ public class CheckLicense {
      */
     public static boolean UpDateLicense(Context mContext, String strCacheDir, int nAuthType) {
         if (isLicense(mContext, nAuthType)) {
-            android.util.Log.d(TAG, "already write License!!!");
+            android.util.Log.d(LCSP, "already write License!!!");
             return false;
         }
         String s = mContext.getApplicationInfo().nativeLibraryDir;
@@ -52,7 +48,7 @@ public class CheckLicense {
         } else if (nAuthType == 3) {
             key = BuildConfig.VERSION_NAME + DM2016;
         }
-        SharedPreferences preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(LCSP, Context.MODE_PRIVATE);
         boolean aBoolean = preferences.getBoolean(key, false);
         if (aBoolean) {
             return true;
@@ -64,7 +60,7 @@ public class CheckLicense {
 
     //拷贝文件
     private static boolean cmd_copy(String dr1, String dr2) {
-        android.util.Log.d(TAG, "cmd_copy: start" + dr1 + "--" + dr2);
+        android.util.Log.d(LCSP, "cmd_copy: start" + dr1 + "--" + dr2);
         boolean result = false;
         DataOutputStream dataOutputStream = null;
         BufferedReader errorStream = null;
@@ -84,10 +80,10 @@ public class CheckLicense {
             dataOutputStream.writeBytes("exit\n");
             dataOutputStream.flush();
             process.waitFor();
-            android.util.Log.d(TAG, "cmd_copy: end");
+            android.util.Log.d(LCSP, "cmd_copy: end");
             result = true;
         } catch (Exception e) {
-            android.util.Log.e(TAG, e.getMessage(), e);
+            android.util.Log.e(LCSP, e.getMessage(), e);
         } finally {
             try {
                 if (dataOutputStream != null) {
@@ -97,7 +93,7 @@ public class CheckLicense {
                     errorStream.close();
                 }
             } catch (IOException e) {
-                android.util.Log.e(TAG, e.getMessage(), e);
+                android.util.Log.e(LCSP, e.getMessage(), e);
             }
         }
         return result;

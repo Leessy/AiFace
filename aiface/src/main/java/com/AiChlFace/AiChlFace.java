@@ -3,6 +3,7 @@ package com.AiChlFace;
 import android.content.Context;
 
 import com.leessy.liuc.aiface.CheckLicense;
+import com.leessy.liuc.aiface.DebugL;
 
 // 多通道人脸识别认证 SDK 接口类
 public class AiChlFace {
@@ -65,6 +66,14 @@ public class AiChlFace {
 
     }
 
+    public static int InitComplex(Context context, int nMaxChannelNum) {
+        DebugL.start(context);
+        SetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        int r = Init(nMaxChannelNum, strCacheDir);
+        DebugL.finished(context);
+        return r;
+    }
 
     // SDK初始化
     // 输入参数：

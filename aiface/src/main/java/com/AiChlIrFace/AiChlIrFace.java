@@ -3,6 +3,7 @@ package com.AiChlIrFace;
 import android.content.Context;
 
 import com.leessy.liuc.aiface.CheckLicense;
+import com.leessy.liuc.aiface.DebugL;
 
 // 人脸识别认证 SDK 接口类
 public class AiChlIrFace {
@@ -31,7 +32,7 @@ public class AiChlIrFace {
     public static int InitCardLicense(Context context, int nMaxChannelNum) {
         SetAuth(3, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir,3);
+        CheckLicense.UpDateLicense(context, strCacheDir, 3);
         inits = Init(nMaxChannelNum, strCacheDir);
         return inits;
     }
@@ -46,7 +47,7 @@ public class AiChlIrFace {
     public static int InitDm2016License(Context context, int nMaxChannelNum) {
         SetAuth(2, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir,2);
+        CheckLicense.UpDateLicense(context, strCacheDir, 2);
         inits = Init(nMaxChannelNum, strCacheDir);
         return inits;
     }
@@ -63,6 +64,15 @@ public class AiChlIrFace {
         String strCacheDir = context.getCacheDir().getAbsolutePath();
         return Init(nMaxChannelNum, strCacheDir);
 
+    }
+
+    public static int InitComplex(Context context, int nMaxChannelNum) {
+        DebugL.start(context);
+        SetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        int r = Init(nMaxChannelNum, strCacheDir);
+        DebugL.finished(context);
+        return r;
     }
 
     // SDK初始化

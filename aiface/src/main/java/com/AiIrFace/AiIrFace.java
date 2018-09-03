@@ -3,6 +3,7 @@ package com.AiIrFace;
 import android.content.Context;
 
 import com.leessy.liuc.aiface.CheckLicense;
+import com.leessy.liuc.aiface.DebugL;
 
 // 人脸识别认证 SDK 接口类
 public class AiIrFace {
@@ -61,6 +62,16 @@ public class AiIrFace {
         return AiFaceInit(strCacheDir);
 
     }
+
+    public static int InitComplex(Context context) {
+        DebugL.start(context);
+        AiFaceSetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        int r = AiFaceInit(strCacheDir);
+        DebugL.finished(context);
+        return r;
+    }
+
 
     // SDK初始化
     // 输入参数： strCachePath ---- 本APP的cache目录，需要此目录有可读写权限，且能根据上级目录找到lib目录加载模型文件（可参考DEMO例程获取cache目录）

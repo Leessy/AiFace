@@ -55,12 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
     //test
     public void sdk(View view) {
-        SerialReadClient serialReadClient = SerialReadClient.getInstance();
-        int i1 = serialReadClient.openSerialPort("/dev/ttySAC0", 115200);
-        Log.d(TAG, "sdk: caer=" + i1);
-        ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
-        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
-        Log.d(TAG, "sdk: " + i);
+//        SerialReadClient serialReadClient = SerialReadClient.getInstance();
+//        int i1 = serialReadClient.openSerialPort("/dev/ttySAC0", 115200);
+//        Log.d(TAG, "sdk: caer=" + i1);
+//        ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
+//        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
+//        Log.d(TAG, "sdk: " + i);
+
+        int i = AiFace.InitDebug2(getApplicationContext());
+        Log.d(TAG, "sdk: ==" + i);
     }
 
     //test

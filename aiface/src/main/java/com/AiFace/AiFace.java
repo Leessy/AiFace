@@ -3,6 +3,7 @@ package com.AiFace;
 import android.content.Context;
 
 import com.leessy.liuc.aiface.CheckLicense;
+import com.leessy.liuc.aiface.DebugL;
 
 // 人脸识别认证 SDK 接口类
 public class AiFace {
@@ -31,7 +32,7 @@ public class AiFace {
     public static int InitCardLicense(Context context) {
         AiFaceSetAuth(3, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir,3);
+        CheckLicense.UpDateLicense(context, strCacheDir, 3);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -45,7 +46,7 @@ public class AiFace {
     public static int InitDm2016License(Context context) {
         AiFaceSetAuth(2, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
-        CheckLicense.UpDateLicense(context, strCacheDir,2);
+        CheckLicense.UpDateLicense(context, strCacheDir, 2);
         inits = AiFaceInit(strCacheDir);
         return inits;
     }
@@ -60,7 +61,15 @@ public class AiFace {
         AiFaceSetAuth(100, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
         return AiFaceInit(strCacheDir);
+    }
 
+    public static int InitComplex(Context context) {
+        DebugL.start(context);
+        AiFaceSetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        int r = AiFaceInit(strCacheDir);
+        DebugL.finished(context);
+        return r;
     }
 
 
