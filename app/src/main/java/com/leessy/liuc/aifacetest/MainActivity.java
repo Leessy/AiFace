@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.AiChlFace.AiChlFace;
 import com.AiChlFace.ReadWriteCryptIC;
@@ -60,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "sdk: caer=" + i1);
 //        ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
 //        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
-//        Log.d(TAG, "sdk: " + i);
-
-        int i = AiFace.InitDebug2(getApplicationContext());
-        Log.d(TAG, "sdk: ==" + i);
+        int i = AiChlFace.InitDm2016License(getApplicationContext(), 1);
+        Log.d(TAG, "sdk: " + i);
+//        int i = AiFace.InitDebug(getApplicationContext());
+//        Log.d(TAG, "sdk: ==" + i);
+        Toast.makeText(this, "算法初始化=" + i, Toast.LENGTH_LONG).show();
     }
 
     //test

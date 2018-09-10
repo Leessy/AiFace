@@ -30,6 +30,6 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api files('libs/cardsdk5.7.6.jar')
     api files('libs/libcommon.jar')
-    api files('libs/libuvccamera.jar')
-    api files('libs/usbCameraCommon.jar')
+    api files('libs/libuvcCamera.jar')
+    api files('libs/libusbCamera.jar')
 }
