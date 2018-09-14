@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "sdk: caer=" + i1);
 //        ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
 //        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
-        int i = AiChlFace.InitDm2016License(getApplicationContext(), 1);
+//        int i = AiChlFace.InitDm2016License(getApplicationContext(), 1);
+        int i = AiFace.InitComplex(this);
+//        int i = AiFace.InitDebug(this);
         Log.d(TAG, "sdk: " + i);
-//        int i = AiFace.InitDebug(getApplicationContext());
 //        Log.d(TAG, "sdk: ==" + i);
         Toast.makeText(this, "算法初始化=" + i, Toast.LENGTH_LONG).show();
     }
