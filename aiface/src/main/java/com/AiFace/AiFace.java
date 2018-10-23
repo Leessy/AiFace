@@ -67,11 +67,6 @@ public class AiFace {
     public static int InitComplex(Context context) {
         DebugL.start(context);
         Log.d("*********", "InitComplex: 查看文件==");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         AiFaceSetAuth(100, 0);
         String strCacheDir = context.getCacheDir().getAbsolutePath();
         int r = AiFaceInit(strCacheDir);
