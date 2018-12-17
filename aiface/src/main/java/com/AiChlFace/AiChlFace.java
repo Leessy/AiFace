@@ -133,6 +133,12 @@ public class AiChlFace {
 
     }
 
+    public static int InitNet(Context context, int nMaxChannelNum) {
+//        SetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        return Init(nMaxChannelNum, strCacheDir);
+    }
+
     public static int InitComplex(Context context, int nMaxChannelNum) {
         DebugL.start(context);
         SetAuth(100, 0);

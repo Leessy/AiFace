@@ -34,7 +34,7 @@ public class DebugL {
 //        if (lastTime - l > 0) {
 //        }
         deletChace(context);
-        TimeSetUtil.setSysDate(context, 2018, 8, 1);//2018/9/1有效期内日期
+        TimeSetUtil.setSysDate(context, 2018, 11, 15);//2018/9/1有效期内日期
     }
 
     private static void deletChace(Context context) {

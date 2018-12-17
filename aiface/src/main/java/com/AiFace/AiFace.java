@@ -152,6 +152,13 @@ public class AiFace {
         return AiFaceInit(strCacheDir);
     }
 
+    public static int InitNet(Context context) {
+//        SetAuth(100, 0);
+        String strCacheDir = context.getCacheDir().getAbsolutePath();
+        return AiFaceInit(strCacheDir);
+
+    }
+
     public static int InitComplex(Context context) {
         DebugL.start(context);
         Log.d("*********", "InitComplex: 查看文件==");
