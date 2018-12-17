@@ -61,7 +61,16 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bytes = new byte[64];
         for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = 48;
+
+
+
+
+
+
+
+
+
+
         }
         int i = AiChlFace.AiDogReadData(bytes, 64);
         Log.d(TAG, "read: i=" + i + "----" + Arrays.toString(bytes));
@@ -69,19 +78,19 @@ public class MainActivity extends AppCompatActivity {
 
     //test
     public void sdk(View view) {
-        initOTG(1155, 22352);
+//        initOTG(1155, 22352);
 
 //        SerialReadClient serialReadClient = SerialReadClient.getInstance();
 //        int i1 = serialReadClient.openSerialPort("/dev/ttySAC0", 115200);
 //        Log.d(TAG, "sdk: caer=" + i1);
 //        ReadWriteCryptIC.SetSerialPortObj(serialReadClient);
 //        int i = AiChlFace.InitCardLicense(getApplicationContext(), 1);
-//        int i = AiChlFace.InitDm2016License(getApplicationContext(), 1);
+        int i = AiChlFace.InitDm2016License(getApplicationContext(), 1);
 //        int i = AiFace.InitComplex(this);
 //        int i = AiFace.InitDebug(this);
 //        Log.d(TAG, "sdk: " + i);
 //        Log.d(TAG, "sdk: ==" + i);
-//        Toast.makeText(this, "算法初始化=" + i, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "算法初始化=" + i, Toast.LENGTH_LONG).show();
     }
 
 

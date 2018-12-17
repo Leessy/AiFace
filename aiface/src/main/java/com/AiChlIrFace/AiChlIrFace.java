@@ -22,6 +22,47 @@ public class AiChlIrFace {
     // 备注：必须在SDK初始化前调用才有效
     public static native void SetAuth(int nAuthType, int nUsbDogHandle);
 
+    // 手持机通过授权供应服务器获取本设备的授权(设备出厂前调用)
+    // 输入参数： strIP ---- 云授权服务器IP地址
+    //            nPort ---- 云授权服务器工作端口（授权供应服务器默认工作端口为6490）
+    // 输出参数：无
+    // 返回：获取的注册码
+    // 备注：1. 如果本设备已有授权，不得重复申请（因服务器记录丢失等原因，重复申请或被视为新设备申请授权从而浪费授权个数）
+    //      2.  必须关闭身份证读卡模块才能调用，建议在加载身份证模块前调用
+    //      3. 本接口会自动对手持机身份证模块供电，完成后自动断开
+    public static String GetLicenseCode(Context activity, String strIP, int nPort) {
+        // 对身份证模块供电
+//        WtWdPowerUtils.setIDPower(ctx);
+
+        // 向授权服务供应服务器申请授权
+        String str = GetLicense(activity, strIP, nPort);
+
+        // 关闭身份证模块电源，如果接下来需要加载身份证模块开始读卡，建议这里不要关电
+//        WtWdPowerUtils.closeIDPower(ctx);
+
+        return str;
+    }
+
+    // 手持机验证本设备的授权
+    // 输入参数： strLicense ---- 本设备的授权
+    // 输出参数：无
+    // 返回：0：验证授权成功，-1：授权无效，-2：非手持机或手持机身份证模块未供电
+    // 备注：1. 本接口必须在初始化前调用，并且不与 SetAuth同时调用
+    //      2.  必须关闭身份证读卡模块才能调用，建议在加载身份证模块前初始化算法
+    //      3. 本接口会自动对手持机身份证模块供电，完成后自动断开
+    public static int VerifyLicenseCode(Context activity, String strLicense) {
+        // 对身份证模块供电
+//        WtWdPowerUtils.setIDPower(ctx);
+
+        // 验证授权
+        int ret = VerifyLicense(activity, strLicense);
+
+        // 关闭身份证模块电源，如果接下来需要加载身份证模块开始读卡，建议这里不要关电
+//        WtWdPowerUtils.closeIDPower(ctx);
+
+        return ret;
+    }
+
     /**
      * 封装初始化接口
      *
@@ -375,6 +416,28 @@ public class AiChlIrFace {
     //        bRgb24 ---- RGB24格式的图象数据，必须预先分配足够的缓冲区
     // 返回：0-成功 ，< 0 失败
     public static native int YUV420P_TO_RGB24(byte[] bYuv420P, int nWidth, int nHeight, int nFmt, byte[] bRgb24);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                                                                                               //
+    //  以下为手持机内部接口，必须在手持机身份证模块已供电时调用，外部建议调用AiFaceGetLicense / AiFaceVerifyLicense     //
+    //                                                                                                               //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // 手持机通过授权供应服务器获取本设备的授权
+    // 输入参数： strIP ---- 云授权服务器IP地址
+    //            nPort ---- 云授权服务器工作端口（云授权服务器默认工作端口为6389）
+    // 输出参数：无
+    // 返回：获取的注册码
+    // 备注：1. 如果本设备已有授权，不得重复申请（因服务器记录丢失等原因，重复申请或被视为新设备申请授权从而浪费授权个数）
+    //       2. 调用本接口前必须对手持机身份证模块供电
+    public static native String GetLicense(Context activity, String strIP, int nPort);
+
+    // 手持机验证本设备的授权
+    // 输入参数： strLicense ---- 本设备的授权
+    // 输出参数：无
+    // 返回：0：验证授权成功，-1：授权无效，-2：非手持机或手持机身份证模块未供电
+    // 备注：调用本接口前必须对手持机身份证模块供电
+    public static native int VerifyLicense(Context activity, String strLicense);
 
     static {
         try {

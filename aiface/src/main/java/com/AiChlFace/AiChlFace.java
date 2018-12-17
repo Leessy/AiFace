@@ -1,5 +1,6 @@
 package com.AiChlFace;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.leessy.liuc.aiface.CheckLicense;
@@ -21,6 +22,72 @@ public class AiChlFace {
     //                        非USB加密狗认证时本参数无意义，可指定任何值
     // 备注：必须在SDK初始化前调用才有效
     public static native void SetAuth(int nAuthType, int nUsbDogHandle);
+
+    // 手持机通过授权供应服务器获取本设备的授权(设备出厂前调用)
+    // 输入参数： strIP ---- 云授权服务器IP地址
+    //            nPort ---- 云授权服务器工作端口（授权供应服务器默认工作端口为6490）
+    // 输出参数：无
+    // 返回：获取的注册码
+    // 备注：1. 如果本设备已有授权，不得重复申请（因服务器记录丢失等原因，重复申请或被视为新设备申请授权从而浪费授权个数）
+    //      2.  必须关闭身份证读卡模块才能调用，建议在加载身份证模块前调用
+    //      3. 本接口会自动对手持机身份证模块供电，完成后自动断开
+    public static String GetLicenseCode(Context context, String strIP, int nPort) {
+//        // 对身份证模块供电
+//        WtWdPowerUtils.setIDPower(ctx);
+
+        // 向授权服务供应服务器申请授权
+        String str = GetLicense(context, strIP, nPort);
+
+//        // 关闭身份证模块电源，如果接下来需要加载身份证模块开始读卡，建议这里不要关电
+//        WtWdPowerUtils.closeIDPower(ctx);
+
+        return str;
+    }
+
+    // 手持机验证本设备的授权
+    // 输入参数： strLicense ---- 本设备的授权
+    // 输出参数：无
+    // 返回：0：验证授权成功，-1：授权无效，-2：非手持机或手持机身份证模块未供电
+    // 备注：1. 本接口必须在初始化前调用，并且不与 SetAuth同时调用
+    //      2.  必须关闭身份证读卡模块才能调用，建议在加载身份证模块前初始化算法
+    //      3. 本接口会自动对手持机身份证模块供电，完成后自动断开
+    public static int VerifyLicenseCode(Activity activity, String strLicense) {
+        Context ctx = activity.getApplicationContext();
+
+//        // 对身份证模块供电
+//        WtWdPowerUtils.setIDPower(ctx);
+
+        // 验证授权
+        int ret = VerifyLicense(activity, strLicense);
+
+//        // 关闭身份证模块电源，如果接下来需要加载身份证模块开始读卡，建议这里不要关电
+//        WtWdPowerUtils.closeIDPower(ctx);
+
+        return ret;
+    }
+
+
+    // 设置检测人脸的图象压缩大小
+    // 输入参数：nDetectSize ---- 检测图象的最大宽度或高度（象素单位），超过此大小则压缩至此大小以内，此参数为0表示采用原图检测不压缩
+    // 输出参数：无
+    // 返回：无
+    // 备注：原始图象的宽或高超过输入参数值时，将被压缩至此参数值以内再检测以保证检测速度；
+    //       输入参数越大，则压缩比越小，支持的人脸大小则越大，检测识别精度越大，但检测效率低；
+    //       输入参数越小，则压缩比越大，支持的人脸大小则越小，检测识别精度越低，但检测效率高；
+    //       输入参数为0时，对原始图象直接检测，精度最高，可支持极小的人脸，但分辨率越高，检测效率越低
+    //       不调用本接口时，SDK默认值为320，建议在较高性能的平台设置为640（单人脸检测识别场景建议图象分辨率为640x480，更高分辨率可能导致精度降低）
+    public static native void SetDetectSize(int nDetectSize);
+
+    // 设置身份证小照片的质量检测
+    // 输入参数：bCheckQuality
+    //              0 ---- 对于身份证小照片（102x126分辨率）不检测质量，较模糊的照片也能检测出人脸并能参与比对
+    //              1 ---- 对于身份证小照片（102x126分辨率）也检测质量，较模糊的照片不返回人脸
+    // 输出参数：无
+    // 返回：无
+    // 备注：本接口只影响身份证小照片，特指从身份证阅读器中读出来的分辨率为102x126的照片
+    //       不调用本接口时，SDK默认不检测身份证小照片的质量，适合一对一人证核验场景。如果用于1:N场景，请设置为检测质量，避免特别模糊的身份证小照片引起误识
+    public static native void SetIdPhotoQuality(int bCheckQuality);
+
 
     /**
      * 封装初始化接口
@@ -377,6 +444,29 @@ public class AiChlFace {
     //        bRgb24 ---- RGB24格式的图象数据，必须预先分配足够的缓冲区
     // 返回：0-成功 ，< 0 失败
     public static native int YUV420P_TO_RGB24(byte[] bYuv420P, int nWidth, int nHeight, int nFmt, byte[] bRgb24);
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                                                                                               //
+    //  以下为手持机内部接口，必须在手持机身份证模块已供电时调用，外部建议调用AiFaceGetLicense / AiFaceVerifyLicense     //
+    //                                                                                                               //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // 手持机通过授权供应服务器获取本设备的授权
+    // 输入参数： strIP ---- 云授权服务器IP地址
+    //            nPort ---- 云授权服务器工作端口（云授权服务器默认工作端口为6389）
+    // 输出参数：无
+    // 返回：获取的注册码
+    // 备注：1. 如果本设备已有授权，不得重复申请（因服务器记录丢失等原因，重复申请或被视为新设备申请授权从而浪费授权个数）
+    //       2. 调用本接口前必须对手持机身份证模块供电
+    public static native String GetLicense(Context activity, String strIP, int nPort);
+
+    // 手持机验证本设备的授权
+    // 输入参数： strLicense ---- 本设备的授权
+    // 输出参数：无
+    // 返回：0：验证授权成功，-1：授权无效，-2：非手持机或手持机身份证模块未供电
+    // 备注：调用本接口前必须对手持机身份证模块供电
+    public static native int VerifyLicense(Context activity, String strLicense);
 
     static {
         try {
